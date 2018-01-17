@@ -6,11 +6,11 @@ import {
   } from 'graphql-server-express';
   import bodyParser from 'body-parser';
   
-  import { schema } from './src/schema';
+  import { schema } from './schema';
 
   const PORT = 8000;
   const server = express();
-server.use('*', cors({ origin: `http://localhost:${PORT}` })); //Restrict the client-origin for security reasons.
+server.use('*', cors({ origin: `http://localhost:${7800}` })); //Restrict the client-origin for security reasons.
 
 server.use('/graphql', bodyParser.json(), graphqlExpress({
   schema 
