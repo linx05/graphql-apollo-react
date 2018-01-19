@@ -28,5 +28,7 @@ ChannelsList.propTypes = {
   data: shape({ loading: boolean, error: object, channels: array }),
 };
 
-const ChannelsListWithData = graphql(channelsListQuery)(ChannelsList);
+const ChannelsListWithData = graphql(channelsListQuery, {
+  options: { pollInterval: 500 },
+})(ChannelsList);
 export default ChannelsListWithData;

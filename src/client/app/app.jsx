@@ -2,6 +2,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import '../style/app.scss';
 import ChannelList from './components/ChannelList/ChannelList';
+import CreateChannel from './components/CreateChannel/CreateChannel';
 import { ApolloProvider } from 'react-apollo';
 import { ApolloClient } from 'apollo-client';
 import { createHttpLink } from 'apollo-link-http';
@@ -22,7 +23,9 @@ render(
         <h3 className="center">React , GraphQL , Apollo</h3>
         <div className="row">
             <div className="col-lg-4 col-lg-offset-4">
-                <ChannelList />
+              <CreateChannel />
+              <br/>
+              <ChannelList />
             </div>
         </div>
       </div>
