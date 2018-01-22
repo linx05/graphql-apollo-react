@@ -22,6 +22,11 @@ const typeDefs = `
     type Mutation {
         addChannel(name: String!): Channel
     }
+    
+    # The subscription root type, specifying what we can subscribe to
+    type Subscription {
+        channelAdded: Channel    # subscription operation.
+    }
 `;
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
