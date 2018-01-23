@@ -5,27 +5,35 @@ import ChannelList from './components/ChannelList/ChannelList';
 import CreateChannel from './components/CreateChannel/CreateChannel';
 import { ApolloProvider } from 'react-apollo';
 import { ApolloClient } from 'apollo-client';
-import { createHttpLink } from 'apollo-link-http';
+import { split } from 'apollo-link';
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import { SubscriptionClient } from 'subscriptions-transport-ws';
-import { addGraphQLSubscriptions } from 'add-graphql-subscriptions';
-const networkInterface = createHttpLink({
+import { WebSocketLink } from 'apollo-link-ws';
+import { getMainDefinition } from 'apollo-utilities';
+import { createHttpLink } from 'apollo-link-http';
+
+const httpLink = createHttpLink({
   uri: 'http://localhost:8000/graphql',
+  options: { reconnect: true }
 });
 
 const wsEndpoint = 'ws://localhost:8000/subscriptions';
 
-let wsClient = (() => new SubscriptionClient(wsEndpoint, {
-  reconnect: true
-}))();
+let wsLink = new WebSocketLink({
+  uri: wsEndpoint,
+  options: { reconnect: true }
+});
 
-const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(
-  networkInterface,
-  wsClient
+const link = split(
+  ({ query }) => {
+    const { kind, operation } = getMainDefinition(query);
+    return kind === 'OperationDefinition' && operation === 'subscription';
+  },
+  wsLink,
+  httpLink
 );
 
 const client = new ApolloClient({
-  link: networkInterfaceWithSubscriptions,
+  link,
   cache: new InMemoryCache(),
 });
 
