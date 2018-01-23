@@ -27,7 +27,7 @@ export const resolvers = {
   },
   Mutation: {
     addChannel: (root, { name }) => {
-      const newChannel = { id: nextId++, name: name };
+      const newChannel = { id: String(nextId++), messages: [], name: name };
       channels.push(newChannel);
       pubsub.publish(CHANNEL_ADDED_TOPIC, { channelAdded: newChannel });
       return newChannel;
@@ -35,7 +35,9 @@ export const resolvers = {
   },
   Subscription: {
     channelAdded: { // create a channelAdded subscription resolver function.
-      subscribe: () => pubsub.asyncIterator(CHANNEL_ADDED_TOPIC), // subscribe to changes in a topic
+      subscribe: () => {
+        return pubsub.asyncIterator(CHANNEL_ADDED_TOPIC);
+      } // subscribe to changes in a topic
     },
   },
 };
